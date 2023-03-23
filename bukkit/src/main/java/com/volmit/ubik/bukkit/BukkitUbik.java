@@ -127,6 +127,37 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
         }
     }
 
+    public File getDataFile(String... strings) {
+        List<String> s = new ArrayList<>();
+        s.add(strings);
+        File f = new File(getDataFolder(), s.toString(File.separator));
+        f.getParentFile().mkdirs();
+        return f;
+    }
+
+    public File getDataFolder(String... strings) {
+        if (strings.length == 0) {
+            return super.getDataFolder();
+        }
+
+        List<String> s = new ArrayList<>();
+        s.add(strings);
+        File f = new File(getDataFolder(), s.toString(File.separator));
+        f.mkdirs();
+
+        return f;
+    }
+
+    public File getDataFolderList(String pre, String[] strings) {
+        List<String> v = new ArrayList<>();
+        v.add(strings);
+        v.add(0, pre);
+        File f = new File(getDataFolder(), v.toString(File.separator));
+        f.mkdirs();
+
+        return f;
+    }
+
     private static void splashscreen() {
         info("\n" +
                 "██╗   ██╗██████╗ ██╗██╗  ██╗\n" +
