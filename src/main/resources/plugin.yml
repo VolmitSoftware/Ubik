@@ -1,8 +1,0 @@
-name: Ubik
-version: '${version}'
-main: com.volmit.ubik.Ubik
-api-version: 1.19
-load: STARTUP
-authors: [ NextdoorPsycho ]
-description: This is an Advanced Utility for Builders, and Fanatics alike
-website: Volmit.com

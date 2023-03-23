@@ -1,0 +1,18 @@
+name: ${name}
+version: '${version}'
+main: com.volmit.ubik.bukkit.BukkitUbik
+api-version: ${apiversion}
+load: STARTUP
+softdepend: [ PlaceholderAPI, WorldGuard, WorldEdit, FastAsyncWorldEdit ]
+authors: [ NextdoorPsycho ]
+description: This is an Advanced Utility for Builders, and Fanatics alike
+libraries:
+  - com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2
+  - org.apache.commons:commons-lang3:3.12.0
+  - com.google.code.gson:gson:2.8.9
+  - com.elmakers.mine.bukkit:EffectLib:9.4
+  - org.bitbucket.mstrobel:procyon-core:0.6.0
+  - org.bitbucket.mstrobel:procyon-compilertools:0.6.0
+  - org.bitbucket.mstrobel:procyon-reflection:0.6.0
+  - org.zeroturnaround:zt-zip:1.15
+website: Volmit.com
