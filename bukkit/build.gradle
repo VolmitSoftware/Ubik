@@ -92,9 +92,12 @@ dependencies {
     testAnnotationProcessor 'systems.manifold:manifold-ext:2023.1.0'
     implementation 'systems.manifold:manifold-rt:2023.1.0'
 
+    //Git
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:6.4.0.202211300538-r'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.4.0.202211300538-r'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.4.0.202211300538-r'
+
     // Shaded
-    // https://commandapi.jorel.dev/
-    // https://github.com/JorelAli/CommandAPI
     implementation "dev.jorel:commandapi-shade:8.8.0"
     implementation "dev.jorel:commandapi-annotations:8.8.0"
     annotationProcessor "dev.jorel:commandapi-annotations:8.8.0"

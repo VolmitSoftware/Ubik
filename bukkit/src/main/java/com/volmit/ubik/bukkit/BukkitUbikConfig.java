@@ -1,22 +1,24 @@
+package com.volmit.ubik.bukkit;
+
 import art.arcane.amulet.io.IO;
 import com.google.gson.Gson;
-import com.volmit.ubik.bukkit.BukkitUbik;
 import com.volmit.ubik.bukkit.util.blackmagic.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-@SuppressWarnings("ALL")
 @Getter
 public class BukkitUbikConfig {
     private static BukkitUbikConfig config = null;
-    public boolean debug = false;
-    public boolean splashScreen = true;
+    private boolean debug = false;
+    private boolean splashScreen = true;
     private boolean metrics = true;
-    private boolean useSql = false;
-
+    private boolean useGitSync = false;
+    private GithubSettings githubSettings = new GithubSettings();
 
     @Setter
     private boolean verbose = false;
@@ -24,8 +26,7 @@ public class BukkitUbikConfig {
     public static BukkitUbikConfig get() {
         if (config == null) {
             BukkitUbikConfig dummy = new BukkitUbikConfig();
-            File l = BukkitUbik.instance.getDataFile("Ubik", "Ubuik.json");
-
+            File l = BukkitUbik.instance.getDataFile( "ubik.json");
 
             if (!l.exists()) {
                 try {
@@ -45,18 +46,15 @@ public class BukkitUbikConfig {
                 config = new BukkitUbikConfig();
             }
         }
-
         return config;
     }
 
-
     @Getter
-    public static class SqlSettings {
-        private String host = "localhost";
-        private int port = 1337;
-        private String database = "adapt";
-        private String username = "user";
-        private String password = "password";
-    }
+    private static List<GithubSettings> githubSettingsList;
 
+    private static class GithubSettings {
+        private String RepositoryName = "RepositoryName";
+        private String RepositoryURL = "RepositoryURL";
+        private String clientID = "clientID";
+    }
 }

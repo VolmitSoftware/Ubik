@@ -14,12 +14,14 @@ import com.volmit.ubik.bukkit.util.FCommand;
 import com.volmit.ubik.bukkit.util.FService;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,23 +29,23 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BukkitUbik extends JavaPlugin implements UbikServer {
+    @Getter
     public static BukkitUbik instance;
     public static BukkitAudiences audiences;
     private final List<FService> services = new ArrayList<>();
     private final List<FCommand> commands = new ArrayList<>();
     private CachedPlayerRepository repository;
-
+    public static GitHub github;
 
     @Override
     public void onLoad() {
-        // https://commandapi.jorel.dev/8.7.0/shading.html#loading
+        instance = this;
         CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
     }
 
     @Override
     public void onEnable() {
         enabling();
-        instance = this;
         CommandAPI.onEnable(this);
         repository = new CachedPlayerRepository(new FilePlayerRepository(new File(getDataFolder(), "playerdata")));
         audiences = BukkitAudiences.create(this);
@@ -58,7 +60,6 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
         //Time & Weather
 
         //Utility
-
 
         info("All Ubik Commands Registered!");
         splashscreen();
@@ -96,6 +97,7 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
     public Stream<UbikWorld> streamWorlds() {
         return getServer().getWorlds().stream().map(BukkitWorld::new);
     }
+
 
     public static void actionbar(Player p, String msg) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
@@ -144,7 +146,6 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
         s.add(strings);
         File f = new File(getDataFolder(), s.toString(File.separator));
         f.mkdirs();
-
         return f;
     }
 
@@ -154,7 +155,6 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
         v.add(0, pre);
         File f = new File(getDataFolder(), v.toString(File.separator));
         f.mkdirs();
-
         return f;
     }
 

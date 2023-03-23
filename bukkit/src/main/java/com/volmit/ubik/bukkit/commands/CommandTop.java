@@ -10,8 +10,8 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@Command("top")
-@Permission("ubik.teleport.top")
+@Command("uworld")
+@Permission("ubik.world")
 public class CommandTop implements FCommand {
     @Default
     @Permission("ubik.teleport.top")
