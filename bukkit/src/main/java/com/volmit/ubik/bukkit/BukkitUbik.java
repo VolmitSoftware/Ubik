@@ -8,6 +8,7 @@ import com.volmit.ubik.api.storage.FilePlayerRepository;
 import com.volmit.ubik.bukkit.commands.CommandTop;
 import com.volmit.ubik.bukkit.impl.BukkitPlayer;
 import com.volmit.ubik.bukkit.impl.BukkitWorld;
+import com.volmit.ubik.bukkit.service.GitHubService;
 import com.volmit.ubik.bukkit.service.PlayerService;
 import com.volmit.ubik.bukkit.util.C;
 import com.volmit.ubik.bukkit.util.FCommand;
@@ -15,13 +16,15 @@ import com.volmit.ubik.bukkit.util.FService;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.kohsuke.github.GitHub;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +38,6 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
     private final List<FService> services = new ArrayList<>();
     private final List<FCommand> commands = new ArrayList<>();
     private CachedPlayerRepository repository;
-    public static GitHub github;
 
     @Override
     public void onLoad() {
@@ -46,6 +48,7 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
     @Override
     public void onEnable() {
         enabling();
+        loadGitRepositories();
         CommandAPI.onEnable(this);
         repository = new CachedPlayerRepository(new FilePlayerRepository(new File(getDataFolder(), "playerdata")));
         audiences = BukkitAudiences.create(this);
@@ -99,6 +102,41 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
     }
 
 
+    @SneakyThrows
+    private void loadGitRepositories() {
+        if (BukkitUbikConfig.get().isUseGitSync()) {
+            File gitBaseFolder = new File(getDataFolder() + "/git/");
+            String REMOTE_URL = BukkitUbikConfig.get().getRepositoryURL();
+            String repoName = extractRepoName(REMOTE_URL);
+            File repoFolder = new File(gitBaseFolder, repoName);
+
+            if (!gitBaseFolder.exists()) {
+                gitBaseFolder.mkdirs();
+            }
+
+            if (!repoFolder.exists()) {
+                GitHubService.cloneRepository(REMOTE_URL, repoFolder.getAbsolutePath());
+            } else {
+                try (Git git = Git.open(repoFolder)) {
+                    // If authentication is required, add the credentials provider to the pull command
+                    // but ill do that later
+                    git.pull().call();
+                } catch (GitAPIException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String extractRepoName(String remoteUrl) {
+        String[] parts = remoteUrl.split("/");
+        String repoNameWithExtension = parts[parts.length - 1];
+        return repoNameWithExtension.replace(".git", "");
+    }
+
+    // Your other methods and class implementation...
+
+
     public static void actionbar(Player p, String msg) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
     }
@@ -134,27 +172,6 @@ public class BukkitUbik extends JavaPlugin implements UbikServer {
         s.add(strings);
         File f = new File(getDataFolder(), s.toString(File.separator));
         f.getParentFile().mkdirs();
-        return f;
-    }
-
-    public File getDataFolder(String... strings) {
-        if (strings.length == 0) {
-            return super.getDataFolder();
-        }
-
-        List<String> s = new ArrayList<>();
-        s.add(strings);
-        File f = new File(getDataFolder(), s.toString(File.separator));
-        f.mkdirs();
-        return f;
-    }
-
-    public File getDataFolderList(String pre, String[] strings) {
-        List<String> v = new ArrayList<>();
-        v.add(strings);
-        v.add(0, pre);
-        File f = new File(getDataFolder(), v.toString(File.separator));
-        f.mkdirs();
         return f;
     }
 

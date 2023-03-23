@@ -6,10 +6,8 @@ import com.volmit.ubik.bukkit.util.blackmagic.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Getter
 public class BukkitUbikConfig {
@@ -18,7 +16,9 @@ public class BukkitUbikConfig {
     private boolean splashScreen = true;
     private boolean metrics = true;
     private boolean useGitSync = false;
-    private GithubSettings githubSettings = new GithubSettings();
+    private String RepositoryName = "RepositoryName";
+    private String RepositoryURL = "RepositoryURL";
+    private String clientID = "clientID";
 
     @Setter
     private boolean verbose = false;
@@ -26,7 +26,7 @@ public class BukkitUbikConfig {
     public static BukkitUbikConfig get() {
         if (config == null) {
             BukkitUbikConfig dummy = new BukkitUbikConfig();
-            File l = BukkitUbik.instance.getDataFile( "ubik.json");
+            File l = BukkitUbik.instance.getDataFile("ubik.json");
 
             if (!l.exists()) {
                 try {
@@ -49,12 +49,4 @@ public class BukkitUbikConfig {
         return config;
     }
 
-    @Getter
-    private static List<GithubSettings> githubSettingsList;
-
-    private static class GithubSettings {
-        private String RepositoryName = "RepositoryName";
-        private String RepositoryURL = "RepositoryURL";
-        private String clientID = "clientID";
-    }
 }
